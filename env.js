@@ -1,1 +1,1 @@
-module.exports = 'prod';
+module.exports = 'local';

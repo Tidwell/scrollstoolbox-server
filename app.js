@@ -1,12 +1,16 @@
 var env = require('./env.js');
-var express = require('express'),
-    routes = require('./routes');
-    //api = require('./routes/api');
+var express = require('express');
+var routes = require('./routes');
+
+var socket = require('./socket');
 
 var app = module.exports = express();
+var server = require('http').createServer(app);
 
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+// Hook Socket.io into Express
+var io = require('socket.io').listen(server);
+
+app.set('view engine', 'html');
 
 app.configure(function() {
     if (env === 'local') {
@@ -24,8 +28,10 @@ app.configure(function() {
 // app.put('/api/post/:post_id', api.postEdit);
 // app.delete('/api/post/:post_id', api.postDelete);
 
-app.get('*', routes.index);
+app.get('/*', routes.index);
 
-app.listen(9000, function() {
+io.sockets.on('connection', function(s) {socket(s,io)});
+
+server.listen(9000, function() {
     console.log("Express server listening on port 9000");
 });

@@ -1,0 +1,13 @@
+{
+  "name": "scrollstoolbox-server",
+  "version": "0.0.0",
+  "dependencies": {
+      "socket.io" ">=0.0.0",
+      "mongoose" ">=0.0.0",
+      "express" ">=3.0.0",
+      "ejs" ">=0.0.0"
+    },
+  "engines": {
+    "node": ">=0.8.0"
+  }
+}
