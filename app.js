@@ -1,4 +1,4 @@
-var env = require('env');
+var env = require('./env.js');
 var express = require('express'),
     routes = require('./routes');
     //api = require('./routes/api');

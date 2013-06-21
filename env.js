@@ -1,1 +1,1 @@
-mopdule.exports = 'local';
+module.exports = 'prod';
