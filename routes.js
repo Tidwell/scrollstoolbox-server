@@ -1,7 +1,7 @@
 /*
  * GET home page.
  */
-var env = require('env');
+var env = require('./env.js');
 var path = require('path');
 exports.index = function(req, res) {
 	if (env === 'local') {
