@@ -7,7 +7,9 @@ var OwnedSchema = new Schema({
     name: String,
     owned: Number,
     buyOverride: Number,
-    sellOverride: Number
+    sellOverride: Number,
+    alwaysBuy: Boolean,
+    alwaysSell: Boolean
 });
 
 var UserModel = new Schema({

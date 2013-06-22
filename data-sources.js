@@ -1,6 +1,29 @@
 var http = require('http');
+var env = require('./env.js');
+var localCache = require('./models/localdata');
+
+var stripProps = [
+'description',
+'kind',
+'types',
+'ap',
+'ac',
+'hp',
+'flavor',
+'targetarea',
+'image: 479,',
+'bundle',
+'animationpreview',
+'version',
+'introduced',
+'anim'
+];
 
 function getScrolls(cb) {
+	if (env === 'local') {
+		if (cb) { cb(parseData(localCache).data); }
+		return;
+	}
 	http.get("http://a.scrollsguide.com/scrolls", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
@@ -9,12 +32,28 @@ function getScrolls(cb) {
 		//the whole response has been recieved
 		var map = {};
 		res.on('end', function() {
-			data = JSON.parse(data);
+			data = parseData(data);
 			if (cb) { cb(data.data); }
 		});
 	}).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
+}
+
+function parseData(data) {
+	if (typeof data === 'string') {
+		data = JSON.parse(data)
+	}
+	console.log(data.data.length);
+	data.data.forEach(function(card,i){
+		stripProps.forEach(function(prop){
+			console.log('strip')
+			delete card[prop];
+			data.data[i] = card;
+		});
+	});
+
+	return data;
 }
 
 function getPrices(cb) {

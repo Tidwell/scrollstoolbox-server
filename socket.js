@@ -134,6 +134,12 @@ module.exports = function(socket, io) {
 		if (card.sellOverride) {
 			card.sellOverride = Number(card.sellOverride);
 		}
+		if (card.alwaysBuy) {
+			card.alwaysBuy = Number(card.alwaysBuy);
+		}
+		if (card.alwaysSell) {
+			card.alwaysSell = Number(card.alwaysSell);
+		}
 
 		var found = false;
 		socket.user.owned.forEach(function(ownedCard, i){
