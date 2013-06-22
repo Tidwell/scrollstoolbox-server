@@ -13,14 +13,14 @@ var io = require('socket.io').listen(server);
 app.set('view engine', 'html');
 
 app.configure(function() {
-    if (env === 'local') {
+	if (env === 'local') {
 		app.use(express.static('./../scrollstoolbox/app'));
 	} else if (env === 'stage') {
 		app.use(express.static('./../scrollstoolbox/dist'));
 	} else {
 		app.use(express.static('./../scrollstoolbox'));
 	}
-    app.use(app.router);
+	app.use(app.router);
 });
 
 //RESTful Routes
@@ -32,8 +32,17 @@ app.configure(function() {
 
 app.get('/*', routes.index);
 
-io.sockets.on('connection', function(s) {socket(s,io)});
+io.sockets.on('connection', function(s) {
+	socket(s, io)
+});
 
 server.listen(9000, function() {
-    console.log("Express server listening on port 9000");
+	console.log("Express server listening on port 9000");
 });
+
+process.on('uncaughtException', function(err) {
+	var fs = require('fs');
+	fs.appendFile('error.log', err, function(err) {
+		console.log('error writting error log');
+	});
+})

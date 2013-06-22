@@ -163,7 +163,7 @@ module.exports = function(socket, io) {
 	}
 
 	function logout() {
-		if (!socket.user) { authError(); return; }
+		if (!socket.user || !socket.user.username) { authError(); return; }
 		loggedInUsers.forEach(function(user,index){
 			if (user.username === socket.user.username) {
 				loggedInUsers.splice(index,1);
