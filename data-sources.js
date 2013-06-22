@@ -47,7 +47,6 @@ function parseData(data) {
 	console.log(data.data.length);
 	data.data.forEach(function(card,i){
 		stripProps.forEach(function(prop){
-			console.log('strip')
 			delete card[prop];
 			data.data[i] = card;
 		});
