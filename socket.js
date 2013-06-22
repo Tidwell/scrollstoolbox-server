@@ -216,7 +216,7 @@ module.exports = function(socket, io) {
 
 	function authError() {
 			socket.emit('user:error', {
-			error: 'Error authenticating, please login again.'
+			error: 'Error authenticating, please login.'
 		});
 	}
 };
