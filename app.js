@@ -15,6 +15,8 @@ app.set('view engine', 'html');
 app.configure(function() {
     if (env === 'local') {
 		app.use(express.static('./../scrollstoolbox/app'));
+	} else if (env === 'stage') {
+		app.use(express.static('./../scrollstoolbox/dist'));
 	} else {
 		app.use(express.static('./../scrollstoolbox'));
 	}

@@ -3,6 +3,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
+var OwnedSchema = new Schema({
+    name: String,
+    owned: Number,
+    buyOverride: Number,
+    sellOverride: Number
+});
+
 var UserModel = new Schema({
 	username: String,
 	password: String,
@@ -10,6 +17,7 @@ var UserModel = new Schema({
 	email: String,
 	authed: Boolean,
 	rating: Number,
+	owned: [OwnedSchema]
 });
 
 UserModel = mongoose.model('User', UserModel);

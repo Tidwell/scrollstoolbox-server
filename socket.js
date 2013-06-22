@@ -6,8 +6,53 @@ var loggedInUsers = [];
 //require models
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/scrollstoolbox');
-
 var User = require('./models/user').UserModel;
+
+//data
+var allData;
+var cardData;
+var prices;
+
+var DataSource = require('./data-sources');
+//get the scrolls data from http://a.scrollsguide.com/scrolls
+DataSource.getScrolls(gotScrolls);
+//get the pricing data from scrollspc
+DataSource.getPrices(gotPrices);
+//get the pricing data from scrolls trading bulletin
+
+function gotScrolls(data) {
+	cardData = data;
+	console.log('card data found',data);
+	checkDone();
+}
+
+function gotPrices(data) {
+	prices = data;
+	//setup to refresh prices in an hr -- TODO
+	console.log('price data found',prices);
+	checkDone();
+}
+
+function checkDone(cb) {
+	if (!cardData || !prices) {
+		return;
+	}
+	updatePrices(cb);
+}
+
+function updatePrices(cb) {
+	var allCards = {};
+	cardData.forEach(function(card) {
+		allCards[card.name] = {
+			price: prices[card.name],
+			card: card
+		}
+	});
+	allData = allCards;
+	if (cb) {
+		cb();
+	}
+}
 
 module.exports = function(socket, io) {
 	socket.on('user:register', register);
@@ -17,6 +62,10 @@ module.exports = function(socket, io) {
 	socket.on('user:update', updateUser);
 	socket.on('user:forgot-password', forgotPassword);
 	socket.on('users:count',sendCountUser);
+
+	socket.on('cards:all', allCards);
+
+	socket.on('card:save', saveCard);
 
 	function register(userData) {
 		//make sure they sent a username & password
@@ -75,6 +124,46 @@ module.exports = function(socket, io) {
 		});
 	}
 
+	function saveCard(card) {
+		if (!socket.user) { authError(); return; }
+
+		if (card.owned) {
+			card.owned = Number(card.owned);
+		}
+		if (card.buyOverride) {
+			card.buyOverride = Number(card.buyOverride);
+		}
+		if (card.sellOverride) {
+			card.sellOverride = Number(card.sellOverride);
+		}
+
+		var found = false;
+		socket.user.owned.forEach(function(ownedCard, i){
+			if (ownedCard.name === card.name) {
+				console.log('updating owned card', card)
+				if (card.owned) {
+					socket.user.owned[i].owned = card.owned;
+				}
+				if (card.buyOverride) {
+					socket.user.owned[i].buyOverride = card.buyOverride;
+				}
+				if (card.sellOverride) {
+					socket.user.owned[i].sellOverride = card.sellOverride;
+				}
+				found = true;
+			}
+		});
+		if (!found) {
+			socket.user.owned.push(card);
+		}
+
+		socket.user.save(function(err,user){
+			socket.emit('card:saved', {card: card.name});
+			delete user.password;
+			socket.emit('user:updated',user)
+		});
+	}
+
 	function logout() {
 		if (!socket.user) { authError(); return; }
 		loggedInUsers.forEach(function(user,index){
@@ -122,16 +211,14 @@ module.exports = function(socket, io) {
 		//send email with new password
 	}
 
+	function allCards() {
+		console.log('request recieved, sending', allData);
+		socket.emit('all-cards', allData);
+	}
+
 	function authError() {
 			socket.emit('user:error', {
 			error: 'Error authenticating, please login again.'
 		});
-	}
-
-	//+ Jonas Raoni Soares Silva
-	//@ http://jsfromhell.com/array/shuffle [v1.0]
-	function shuffle(o) { //v1.0
-		for (var j, x, i = o.length; i; j = parseInt(Math.random() * i,10), x = o[--i], o[i] = o[j], o[j] = x);
-		return o;
 	}
 };
