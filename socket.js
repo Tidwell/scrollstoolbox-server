@@ -168,6 +168,7 @@ module.exports = function(socket, io) {
 			if (user.username === socket.user.username) {
 				loggedInUsers.splice(index,1);
 				socket.emit('user:logged-out', {});
+				delete socket.user;
 				sendCount();
 			}
 		});
