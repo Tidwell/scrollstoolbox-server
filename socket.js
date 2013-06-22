@@ -22,14 +22,12 @@ DataSource.getPrices(gotPrices);
 
 function gotScrolls(data) {
 	cardData = data;
-	console.log('card data found',data);
 	checkDone();
 }
 
 function gotPrices(data) {
 	prices = data;
 	//setup to refresh prices in an hr -- TODO
-	console.log('price data found',prices);
 	checkDone();
 }
 
@@ -140,7 +138,6 @@ module.exports = function(socket, io) {
 		var found = false;
 		socket.user.owned.forEach(function(ownedCard, i){
 			if (ownedCard.name === card.name) {
-				console.log('updating owned card', card)
 				if (card.owned) {
 					socket.user.owned[i].owned = card.owned;
 				}
@@ -212,8 +209,7 @@ module.exports = function(socket, io) {
 	}
 
 	function allCards() {
-		console.log('request recieved, sending', allData);
-		socket.emit('all-cards', allData);
+		socket.emit('cards:all', allData);
 	}
 
 	function authError() {
