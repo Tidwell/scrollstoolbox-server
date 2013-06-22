@@ -27,8 +27,10 @@ function gotScrolls(data) {
 
 function gotPrices(data) {
 	prices = data;
-	//setup to refresh prices in an hr -- TODO
 	checkDone();
+
+	//setup to refresh prices in an hr
+	setTimeout(function() { DataSource.getPrices(gotPrices); }, 3600000);
 }
 
 function checkDone(cb) {
@@ -167,9 +169,11 @@ module.exports = function(socket, io) {
 		loggedInUsers.forEach(function(user,index){
 			if (user.username === socket.user.username) {
 				loggedInUsers.splice(index,1);
-				socket.emit('user:logged-out', {});
 				delete socket.user;
-				sendCount();
+				process.nextTick(function() {
+					socket.emit('user:logged-out', {});
+					sendCount();
+				});
 			}
 		});
 	}
