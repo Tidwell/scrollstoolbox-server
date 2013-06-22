@@ -144,14 +144,10 @@ module.exports = function(socket, io) {
 		var found = false;
 		socket.user.owned.forEach(function(ownedCard, i){
 			if (ownedCard.name === card.name) {
-				if (card.owned) {
-					socket.user.owned[i].owned = card.owned;
-				}
-				if (card.buyOverride) {
-					socket.user.owned[i].buyOverride = card.buyOverride;
-				}
-				if (card.sellOverride) {
-					socket.user.owned[i].sellOverride = card.sellOverride;
+				for (var prop in card) {
+					if (card.hasOwnProperty(prop) && typeof card[prop] !== 'undefined') {
+						socket.user.owned[i][prop] = card[prop];
+					}
 				}
 				found = true;
 			}
@@ -163,7 +159,6 @@ module.exports = function(socket, io) {
 		socket.user.save(function(err,user){
 			socket.emit('card:saved', {card: card.name});
 			delete user.password;
-			socket.emit('user:updated',user)
 		});
 	}
 
