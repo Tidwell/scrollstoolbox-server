@@ -63,7 +63,6 @@ function getPrices(cb) {
 		});
 		//the whole response has been recieved
 		res.on('end', function() {
-			console.log(data,'done')
 			if (typeof data === 'string') {
 				data = JSON.parse(data)
 			}
