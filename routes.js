@@ -33,6 +33,7 @@ function gotScrolls(data) {
 
 exports.saveCollection = function(req,res) {
 	var urlParts = url.parse(req.url, true);
+ 	if (!urlParts.query) { res.send({error: "true", msg: "No data sent."}); return; };
 	var collection = JSON.parse(urlParts.query.data);
 	var inGameName = urlParts.query.inGameName;
 
