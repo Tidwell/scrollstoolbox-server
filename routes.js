@@ -33,7 +33,7 @@ function gotScrolls(data) {
 
 exports.saveCollection = function(req,res) {
 	var urlParts = url.parse(req.url, true);
- 	if (!urlParts.query) { res.send({error: "true", msg: "No data sent."}); return; };
+ 	if (!urlParts.query) { res.end({error: "true", msg: "No data sent."}); return; };
 	var collection = JSON.parse(urlParts.query.data);
 	var inGameName = urlParts.query.inGameName;
 
@@ -43,7 +43,7 @@ exports.saveCollection = function(req,res) {
 	}, function(err, userData) {
 		if (!userData.length) {
 			console.log('fail')
-			res.send({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'})
+			res.end({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'});
 			return;
 		}
 		userData = userData[0];
