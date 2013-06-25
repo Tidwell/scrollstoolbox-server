@@ -42,7 +42,7 @@ exports.saveCollection = function(req,res) {
 	}, function(err, userData) {
 		if (!userData.length) {
 			console.log('fail')
-			res.send({error: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'})
+			res.send({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'})
 			return;
 		}
 		userData = userData[0];
@@ -97,7 +97,7 @@ exports.saveCollection = function(req,res) {
 
 
 		userData.save(function() {
-			res.send({okay: true});
+			res.send({okay: "true", msg: totalCards+' scrolls have been imported to ScrollsToolbox.'});
 		})
 
 	});

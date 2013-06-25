@@ -63,11 +63,12 @@ function getPrices(cb) {
 		});
 		//the whole response has been recieved
 		res.on('end', function() {
+			console.log(data,'done')
 			if (typeof data === 'string') {
 				data = JSON.parse(data)
 			}
 			var all = {};
-			data.forEach(function(item,i) {
+			data.data.forEach(function(item,i) {
 				var obj = {
 					low: null,
 					high: null

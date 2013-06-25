@@ -39,9 +39,9 @@ server.listen(9000, function() {
 	console.log("Express server listening on port 9000");
 });
 
-process.on('uncaughtException', function(err) {
-	var fs = require('fs');
-	fs.appendFile('error.log', err, function(err) {
-		console.log('error writting error log');
-	});
-})
+// process.on('uncaughtException', function(err) {
+// 	var fs = require('fs');
+// 	fs.appendFile('error.log', err, function(err) {
+// 		console.log('error writting error log');
+// 	});
+// })
