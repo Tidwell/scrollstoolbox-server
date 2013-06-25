@@ -29,7 +29,6 @@ function gotScrolls(data) {
 		dataMap[card.id] = card;
 	})
 	cardData = dataMap;
-	console.log(cardData, 'data');
 }
 
 exports.saveCollection = function(req,res) {
@@ -80,9 +79,7 @@ exports.saveCollection = function(req,res) {
 				userData.owned[i].owned = cards[ownedCard.name].owned;
 				totalCards += cards[ownedCard.name].owned;
 				updated.push(ownedCard.name);
-				console.log('updated user data to be', userData.owned[i])
 			} else {
-				console.log('reset user data to',userData.owned[i])
 				updated.push(ownedCard.name);
 				userData.owned[i].owned = 0;
 			}
@@ -100,7 +97,6 @@ exports.saveCollection = function(req,res) {
 
 
 		userData.save(function() {
-			console.log('done save of',totalCards)
 			res.send({okay: true});
 		})
 
