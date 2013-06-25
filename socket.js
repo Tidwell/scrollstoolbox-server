@@ -30,7 +30,9 @@ function gotPrices(data) {
 	checkDone();
 
 	//setup to refresh prices in an hr
-	setTimeout(function() { DataSource.getPrices(gotPrices); }, 3600000);
+	setTimeout(function() {
+		DataSource.getPrices(gotPrices);
+	}, 3600000);
 }
 
 function checkDone(cb) {
@@ -61,11 +63,13 @@ module.exports = function(socket, io) {
 	socket.on('disconnect', logout);
 	socket.on('user:update', updateUser);
 	socket.on('user:forgot-password', forgotPassword);
-	socket.on('users:count',sendCountUser);
+	socket.on('users:count', sendCountUser);
 
 	socket.on('cards:all', allCards);
 
 	socket.on('card:save', saveCard);
+
+	socket.on('game:get', sendGame);
 
 	function register(userData) {
 		//make sure they sent a username & password
@@ -112,20 +116,26 @@ module.exports = function(socket, io) {
 	}
 
 	function updateUser(userData) {
-		if (!socket.user) { authError(); return; }
+		if (!socket.user) {
+			authError();
+			return;
+		}
 		socket.user.inGameName = userData.inGameName;
 		socket.user.email = userData.email;
 		if (userData.newPassword) {
 			socket.user.password = userData.newPassword;
 		}
-		socket.user.save(function(err,user){
+		socket.user.save(function(err, user) {
 			delete user.password;
 			socket.emit('user:updated', user);
 		});
 	}
 
 	function saveCard(card) {
-		if (!socket.user) { authError(); return; }
+		if (!socket.user) {
+			authError();
+			return;
+		}
 
 		if (card.owned) {
 			card.owned = Number(card.owned);
@@ -144,7 +154,7 @@ module.exports = function(socket, io) {
 		}
 
 		var found = false;
-		socket.user.owned.forEach(function(ownedCard, i){
+		socket.user.owned.forEach(function(ownedCard, i) {
 			if (ownedCard.name === card.name) {
 				for (var prop in card) {
 					if (card.hasOwnProperty(prop) && typeof card[prop] !== 'undefined') {
@@ -158,17 +168,22 @@ module.exports = function(socket, io) {
 			socket.user.owned.push(card);
 		}
 
-		socket.user.save(function(err,user){
-			socket.emit('card:saved', {card: card.name});
+		socket.user.save(function(err, user) {
+			socket.emit('card:saved', {
+				card: card.name
+			});
 			delete user.password;
 		});
 	}
 
 	function logout() {
-		if (!socket.user || !socket.user.username) { authError(); return; }
-		loggedInUsers.forEach(function(user,index){
+		if (!socket.user || !socket.user.username) {
+			authError();
+			return;
+		}
+		loggedInUsers.forEach(function(user, index) {
 			if (user.username === socket.user.username) {
-				loggedInUsers.splice(index,1);
+				loggedInUsers.splice(index, 1);
 				delete socket.user;
 				process.nextTick(function() {
 					socket.emit('user:logged-out', {});
@@ -179,20 +194,28 @@ module.exports = function(socket, io) {
 	}
 
 	function sendCount() {
-		io.sockets.emit('users:count', {count: loggedInUsers.length});
+		io.sockets.emit('users:count', {
+			count: loggedInUsers.length
+		});
 	}
+
 	function sendCountUser() {
-		socket.emit('users:count', {count: loggedInUsers.length});
+		socket.emit('users:count', {
+			count: loggedInUsers.length
+		});
 	}
 
 	function login(data) {
 		//otherwise make sure they passed params
-		if (!data || typeof data.username !== 'string' || typeof data.password !== 'string' ) {
+		if (!data || typeof data.username !== 'string' || typeof data.password !== 'string') {
 			authError();
 			return;
 		}
 		//check the db
-		User.find({ username: data.username, password: data.password }, function(err,userData){
+		User.find({
+			username: data.username,
+			password: data.password
+		}, function(err, userData) {
 			if (!userData.length) {
 				authError();
 				return;
@@ -209,7 +232,7 @@ module.exports = function(socket, io) {
 		sendCount();
 	}
 
-	function forgotPassword(email){
+	function forgotPassword(email) {
 		//reset password to random
 		//send email with new password
 	}
@@ -219,8 +242,27 @@ module.exports = function(socket, io) {
 	}
 
 	function authError() {
-			socket.emit('user:error', {
+		socket.emit('user:error', {
 			error: 'Error authenticating, please login.'
+		});
+	}
+
+	function sendGame() {
+		fs = require('fs')
+		fs.readFile('./game', 'utf8', function(err, data) {
+			if (err) {
+				return console.log(err);
+			}
+			var events = [];
+			data = data.split("\n");
+
+			data.forEach(function(line){
+				if (line) {
+					events.push(JSON.parse(line));
+				}
+			});
+
+			socket.emit('game:data', events);
 		});
 	}
 };

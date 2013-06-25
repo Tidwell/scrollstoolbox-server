@@ -1,7 +1,6 @@
 var env = require('./env.js');
 var express = require('express');
 var routes = require('./routes');
-
 var socket = require('./socket');
 
 var app = module.exports = express();
@@ -24,7 +23,7 @@ app.configure(function() {
 });
 
 //RESTful Routes
-// app.get('/api/posts', api.posts);
+app.get('/collection/update', routes.saveCollection);
 // app.get('/api/post/:post_id', api.post);
 // app.post('/api/posts', api.postAdd);
 // app.put('/api/post/:post_id', api.postEdit);
@@ -40,9 +39,9 @@ server.listen(9000, function() {
 	console.log("Express server listening on port 9000");
 });
 
-process.on('uncaughtException', function(err) {
-	var fs = require('fs');
-	fs.appendFile('error.log', err, function(err) {
-		console.log('error writting error log');
-	});
-})
+// process.on('uncaughtException', function(err) {
+// 	var fs = require('fs');
+// 	fs.appendFile('error.log', err, function(err) {
+// 		console.log('error writting error log');
+// 	});
+// })

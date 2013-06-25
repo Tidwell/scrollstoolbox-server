@@ -44,7 +44,6 @@ function parseData(data) {
 	if (typeof data === 'string') {
 		data = JSON.parse(data)
 	}
-	console.log(data.data.length);
 	data.data.forEach(function(card,i){
 		stripProps.forEach(function(prop){
 			delete card[prop];
@@ -57,42 +56,44 @@ function parseData(data) {
 
 function getPrices(cb) {
 	var prices;
-	var jsdom = require("jsdom");
-	jsdom.env(
-		"http://www.scrollspc.com", ["http://code.jquery.com/jquery.js"], function(errors, window) {
-		var $ = window.$;
-		(function() {
+	http.get("http://scrollspc.com/api_all.php", function(res) {
+		var data = '';
+		res.on('data', function(chunk) {
+			data += chunk;
+		});
+		//the whole response has been recieved
+		res.on('end', function() {
+			if (typeof data === 'string') {
+				data = JSON.parse(data)
+			}
 			var all = {};
-			$('table tr').each(function() {
-				//get each row
-				var $cells = $(this).children('td');
-				var name = $($cells[1]).find('a').html();
-				//make sure there is a name and that the name field doesnt contain markup
-				if (name) {
-					var obj = {};
-					//parse the prices into an obj with .low and .high
-					if ($cells.length > 2) {
-						var data = $($cells[2]).html().replace(' G', '');
-						if (data.indexOf('-') !== -1) {
-							data = data.split('-');
-							obj.low = Number(data[0]);
-							obj.high = Number(data[1]);
-						} else {
-							var price = Number(data);
-							obj.low = price;
-							obj.high = price;
-						}
-					}
-					//make sure we parsed a price
-					if (obj.low && obj.high) {
-						all[name] = obj;
-					}
+			data.forEach(function(item,i) {
+				var obj = {
+					low: null,
+					high: null
+				};
+
+				item.price = Number(item.price);
+				item.priceMax = Number(item.price_max);
+
+				if (item.priceMax) {
+					obj.low = item.price;
+					obj.high = item.priceMax;
+				} else {
+					obj.low = item.price;
+					obj.high = item.price;
 				}
+				all[item.name] = obj;
 			});
 			prices = all;
+
 			if (cb) { cb(prices); }
-		}());
+		});
+	}).on('error', function(e) {
+		console.log("Got error: " + e.message);
 	});
+
+
 }
 
 module.exports = {
