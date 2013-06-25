@@ -41,9 +41,10 @@ exports.saveCollection = function(req,res) {
 	User.find({
 		inGameName: inGameName
 	}, function(err, userData) {
+		res.contentType('application/json');
 		if (!userData.length) {
 			console.log('fail')
-			res.end({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'});
+			res.send({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'});
 			return;
 		}
 		userData = userData[0];
