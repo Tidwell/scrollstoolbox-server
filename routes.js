@@ -36,6 +36,7 @@ exports.saveCollection = function(req,res) {
  	if (!urlParts.query) { res.end({error: "true", msg: "No data sent."}); return; };
 	var collection = JSON.parse(urlParts.query.data);
 	var inGameName = urlParts.query.inGameName;
+	console.log('request made', collection, inGameName)
 
 	//get the user
 	User.find({
@@ -99,7 +100,7 @@ exports.saveCollection = function(req,res) {
 
 
 		userData.save(function() {
-			res.send({okay: "true", msg: totalCards+' scrolls have been imported to ScrollsToolbox.'});
+			res.send({okay: "true", msg: 'Data for your '+totalCards+' scrolls has been synced with scrollstoolbox.com'});
 		})
 
 	});
