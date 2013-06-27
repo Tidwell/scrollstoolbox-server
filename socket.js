@@ -283,13 +283,13 @@ module.exports = {
 function sendSyncedMessage(data) {
 	console.log('sync request recieved',data)
 	User.find({
-		inGameName: data.inGameNae
+		inGameName: data.inGameName
 	}, function(err, userData) {
 		if (!userData.length) {
 			return;
 		}
 		io.sockets.clients().forEach(function (socket) {
-			if (socket.user.inGameName === data.inGameNae) {
+			if (socket.user.inGameName === data.inGameName) {
 				//update the data
 				socket.user = userData[0];
 				//tell the user

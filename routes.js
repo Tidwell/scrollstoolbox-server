@@ -100,7 +100,7 @@ exports.saveCollection = function(req,res) {
 		userData.save(function() {
 			var data = {okay: "true", msg: 'Data for your '+totalCards+' scrolls has been synced with scrollstoolbox.com'};
 			res.send(data);
-			data.inGameNae = inGameName;
+			data.inGameName = inGameName;
 			communicator.emit('collection:synced', data);
 		})
 
