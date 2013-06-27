@@ -289,7 +289,7 @@ function sendSyncedMessage(data) {
 			return;
 		}
 		io.sockets.clients().forEach(function (socket) {
-			if (socket.user.inGameName === data.inGameName) {
+			if (socket.user && socket.user.inGameName === data.inGameName) {
 				//update the data
 				socket.user = userData[0];
 				//tell the user
