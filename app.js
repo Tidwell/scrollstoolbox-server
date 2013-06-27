@@ -2,6 +2,8 @@ var env = require('./env.js');
 var express = require('express');
 var routes = require('./routes');
 var socket = require('./socket');
+var events = require('events');
+var util = require('util');
 
 var app = module.exports = express();
 var server = require('http').createServer(app);
@@ -24,20 +26,26 @@ app.configure(function() {
 
 //RESTful Routes
 app.get('/collection/update', routes.saveCollection);
-// app.get('/api/post/:post_id', api.post);
-// app.post('/api/posts', api.postAdd);
-// app.put('/api/post/:post_id', api.postEdit);
-// app.delete('/api/post/:post_id', api.postDelete);
 
 app.get('/*', routes.index);
 
 io.sockets.on('connection', function(s) {
-	socket(s, io)
+	socket.socket(s, io)
 });
 
 server.listen(9000, function() {
 	console.log("Express server listening on port 9000");
 });
+
+//create teh communicator so http can talk to sockets
+var Communicator = function(){ events.EventEmitter.call(this); };
+util.inherits(Communicator, events.EventEmitter);
+var communicator = new Communicator();
+//pass it
+socket.setIo(io);
+socket.setCommunicator(communicator);
+routes.setCommunicator(communicator);
+
 
 process.on('uncaughtException', function(err) {
 	var fs = require('fs');

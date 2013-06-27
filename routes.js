@@ -6,7 +6,7 @@ var path = require('path');
 var url = require('url');
 
 var User = require('./models/user').UserModel;
-
+var communicator;
 
 exports.index = function(req, res) {
 	if (env === 'local') {
@@ -36,7 +36,6 @@ exports.saveCollection = function(req,res) {
  	if (!urlParts.query) { res.end({error: "true", msg: "No data sent."}); return; };
 	var collection = JSON.parse(urlParts.query.data);
 	var inGameName = urlParts.query.inGameName;
-	console.log('request made', collection, inGameName)
 
 	//get the user
 	User.find({
@@ -44,7 +43,6 @@ exports.saveCollection = function(req,res) {
 	}, function(err, userData) {
 		res.contentType('application/json');
 		if (!userData.length) {
-			console.log('fail')
 			res.send({error: "true", msg: 'No user found with your Name, have you set your In-Game Name on scrollstoolbox.com/account'});
 			return;
 		}
@@ -100,7 +98,10 @@ exports.saveCollection = function(req,res) {
 
 
 		userData.save(function() {
-			res.send({okay: "true", msg: 'Data for your '+totalCards+' scrolls has been synced with scrollstoolbox.com'});
+			var data = {okay: "true", msg: 'Data for your '+totalCards+' scrolls has been synced with scrollstoolbox.com'};
+			res.send(data);
+			data.inGameNae = inGameName;
+			communicator.emit('collection:synced', data);
 		})
 
 	});
@@ -110,3 +111,7 @@ exports.partials = function(req, res) {
 	var name = req.params.name;
 	res.render('partials/' + name);
 };
+
+exports.setCommunicator = function(e) {
+	communicator = e;
+}
