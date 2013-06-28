@@ -26,6 +26,7 @@ app.configure(function() {
 
 //RESTful Routes
 app.get('/collection/update', routes.saveCollection);
+app.post('/collection/update', routes.saveCollection);
 
 app.get('/*', routes.index);
 
