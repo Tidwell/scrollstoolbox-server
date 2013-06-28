@@ -24,9 +24,20 @@ app.configure(function() {
 	app.use(app.router);
 });
 
+function rawBody(req, res, next) {
+  req.setEncoding('utf8');
+  req.rawBody = '';
+  req.on('data', function(chunk) {
+    req.rawBody += chunk;
+  });
+  req.on('end', function(){
+    next();
+  });
+}
+
 //RESTful Routes
 app.get('/collection/update', routes.saveCollection);
-app.post('/collection/update', routes.saveCollection);
+app.post('/collection/update', rawBody, routes.saveCollection);
 
 app.get('/*', routes.index);
 

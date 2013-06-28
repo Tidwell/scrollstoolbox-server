@@ -34,8 +34,14 @@ function gotScrolls(data) {
 exports.saveCollection = function(req,res) {
 	var urlParts = url.parse(req.url, true);
  	if (!urlParts.query) { res.end({error: "true", msg: "No data sent."}); return; };
-	var collection = JSON.parse(urlParts.query.data);
+
+ 	if (urlParts.query.data) {
+		var collection = JSON.parse(urlParts.query.data); //for get
+	} else {
+		collection = JSON.parse(req.rawBody); //post
+	}
 	var inGameName = urlParts.query.inGameName;
+
 
 	//get the user
 	User.find({
