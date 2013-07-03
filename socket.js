@@ -48,6 +48,12 @@ function checkDone(cb) {
 function updatePrices(cb) {
 	var allCards = {};
 	cardData.forEach(function(card) {
+		if (!prices[card.name]) {
+			prices[card.name] = {
+				low: null,
+				high: null
+			};
+		}
 		allCards[card.name] = {
 			price: prices[card.name],
 			card: card
@@ -281,7 +287,6 @@ module.exports = {
 };
 
 function sendSyncedMessage(data) {
-	console.log('sync request recieved',data)
 	User.find({
 		inGameName: data.inGameName
 	}, function(err, userData) {
