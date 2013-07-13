@@ -191,17 +191,22 @@ module.exports = {
 				authError();
 				return;
 			}
+			var toRemove;
 			loggedInUsers.forEach(function(user, index) {
 				if (!socket.user) { return; }
 				if (user.username === socket.user.username) {
-					loggedInUsers.splice(index, 1);
-					delete socket.user;
-					process.nextTick(function() {
-						socket.emit('user:logged-out', {});
-						sendCount();
-					});
+					toRemove = index;
 				}
 			});
+
+			if (typeof toRemove !== 'undefined') {
+				loggedInUsers.splice(toRemove, 1);
+				delete socket.user;
+				process.nextTick(function() {
+					socket.emit('user:logged-out', {});
+					sendCount();
+				});
+			}
 		}
 
 		function sendCount() {
@@ -222,6 +227,7 @@ module.exports = {
 				authError();
 				return;
 			}
+
 			//check the db
 			User.find({
 				username: data.username,
@@ -231,6 +237,16 @@ module.exports = {
 					authError();
 					return;
 				}
+				//see if they are already logged in and remove from array if they are
+				var toRemove = [];
+				loggedInUsers.forEach(function(user,index){
+					if (user.username === data.username) {
+						toRemove.push(index);
+					}
+				});
+				toRemove.forEach(function(removeIndex){
+					loggedInUsers.splice(removeIndex,1);
+				});
 				sendLogin(userData[0]);
 			});
 		}

@@ -56,7 +56,7 @@ function parseData(data) {
 
 function getPrices(cb) {
 	var prices;
-	http.get("http://scrollspc.com/api_all.php", function(res) {
+	http.get("http://api.scrollspost.com/v1/prices/1-day/", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
 			data += chunk;
@@ -67,22 +67,13 @@ function getPrices(cb) {
 				data = JSON.parse(data)
 			}
 			var all = {};
-			data.data.forEach(function(item,i) {
+			data.forEach(function(item,i) {
 				var obj = {
-					low: null,
-					high: null
+					low: item.price.buy,
+					high: item.price.sell,
+					suggested: item.price.suggested
 				};
 
-				item.price = Number(item.price);
-				item.priceMax = Number(item.price_max);
-
-				if (item.priceMax) {
-					obj.low = item.price;
-					obj.high = item.priceMax;
-				} else {
-					obj.low = item.price;
-					obj.high = item.price;
-				}
 				all[item.name] = obj;
 			});
 			prices = all;
