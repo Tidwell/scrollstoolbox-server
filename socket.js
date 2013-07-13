@@ -81,6 +81,8 @@ module.exports = {
 
 		socket.on('game:get', sendGame);
 
+		socket.on('collection:list', userCollection);
+
 		function register(userData) {
 			//make sure they sent a username & password
 			if (!userData.username || !userData.password) {
@@ -290,6 +292,19 @@ module.exports = {
 				});
 
 				socket.emit('game:data', events);
+			});
+		}
+
+		function userCollection(data) {
+			User.find({
+				username: data.username
+			}, function(err, userData) {
+				if (!userData.length) {
+					socket.emit('collection:list', {error: true, msg: 'No user found'});
+					return;
+				}
+				console.log(userData);
+				socket.emit('collection:list', {collection: userData[0].owned});
 			});
 		}
 	},

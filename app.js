@@ -40,6 +40,7 @@ app.get('/collection/update', routes.saveCollection);
 app.post('/collection/update', rawBody, routes.saveCollection);
 
 app.get('/*', routes.index);
+app.get('/*/*', routes.index);
 
 io.sockets.on('connection', function(s) {
 	socket.socket(s, io)
