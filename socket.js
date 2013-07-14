@@ -32,10 +32,10 @@ function gotPrices(data) {
 	prices = data;
 	checkDone();
 
-	//setup to refresh prices in an hr
+	//setup to refresh prices in 6 hrs
 	setTimeout(function() {
 		DataSource.getPrices(gotPrices);
-	}, 3600000);
+	}, 3600000*6);
 }
 
 function checkDone(cb) {

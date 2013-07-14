@@ -56,7 +56,7 @@ function parseData(data) {
 
 function getPrices(cb) {
 	var prices;
-	http.get("http://api.scrollspost.com/v1/prices/1-day/", function(res) {
+	http.get("http://api.scrollspost.com/v1/prices/3-days/", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
 			data += chunk;
@@ -69,8 +69,8 @@ function getPrices(cb) {
 			var all = {};
 			data.forEach(function(item,i) {
 				var obj = {
-					low: item.price.buy,
-					high: item.price.sell,
+					low: Math.min(item.price.buy, item.price.sell),
+					high: Math.max(item.price.buy, item.price.sell),
 					suggested: item.price.suggested
 				};
 
