@@ -60,10 +60,10 @@ socket.setCommunicator(communicator);
 routes.setCommunicator(communicator);
 
 
-// process.on('uncaughtException', function(err) {
-// 	var fs = require('fs');
-// 	console.log(err);
-// 	fs.appendFile('error.log', err, function(err) {
-// 		console.log('error writting error log');
-// 	});
-// })
+process.on('uncaughtException', function(err) {
+	var fs = require('fs');
+	console.log(err);
+	fs.appendFile('error.log', err, function(err) {
+		console.log('error writting error log');
+	});
+})
