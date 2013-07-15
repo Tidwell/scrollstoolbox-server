@@ -130,7 +130,10 @@ module.exports = {
 		}
 
 		function updateSettings(userData) {
-			if (!socket.user) { return; }
+			if (!socket.user) {
+				socket.emit('settings:error', {});
+				return;
+			}
 			if (userData.settings) {
 				socket.user.settings = userData.settings;
 			}
