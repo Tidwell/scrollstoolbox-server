@@ -55,7 +55,6 @@ function parseData(data) {
 }
 
 function getPrices(cb) {
-	var prices;
 	http.get("http://api.scrollspost.com/v1/prices/3-days/", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
@@ -66,25 +65,25 @@ function getPrices(cb) {
 			if (typeof data === 'string') {
 				data = JSON.parse(data)
 			}
-			var all = {};
-			data.forEach(function(item,i) {
-				var obj = {
-					low: Math.min(item.price.buy, item.price.sell),
-					high: Math.max(item.price.buy, item.price.sell),
-					suggested: item.price.suggested
-				};
-
-				all[item.name] = obj;
-			});
-			prices = all;
-
-			if (cb) { cb(prices); }
+			parsePrices(data,cb);
 		});
 	}).on('error', function(e) {
 		console.log("Got error: " + e.message);
 	});
+}
 
+function parsePrices(data,cb) {
+	var all = {};
+	data.forEach(function(item,i) {
+		var obj = {
+			low: Math.min(item.price.buy, item.price.sell),
+			high: Math.max(item.price.buy, item.price.sell),
+			suggested: item.price.suggested
+		};
 
+		all[item.name] = obj;
+	});
+	if (cb) { cb(all); }
 }
 
 module.exports = {

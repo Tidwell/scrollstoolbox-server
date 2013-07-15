@@ -75,6 +75,8 @@ module.exports = {
 		socket.on('user:forgot-password', forgotPassword);
 		socket.on('users:count', sendCountUser);
 
+		socket.on('settings:update', updateSettings);
+
 		socket.on('cards:all', allCards);
 
 		socket.on('card:save', saveCard);
@@ -124,6 +126,17 @@ module.exports = {
 					}
 					sendLogin(user);
 				});
+			});
+		}
+
+		function updateSettings(userData) {
+			if (!socket.user) { return; }
+			if (userData.settings) {
+				socket.user.settings = userData.settings;
+			}
+			socket.user.save(function(err, user) {
+				delete user.password;
+				socket.emit('settings:updated', user);
 			});
 		}
 

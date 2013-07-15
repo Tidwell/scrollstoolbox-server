@@ -19,7 +19,38 @@ var UserModel = new Schema({
 	email: String,
 	authed: Boolean,
 	rating: Number,
-	owned: [OwnedSchema]
+	owned: [OwnedSchema],
+	settings: {
+		theme: String,
+
+		//wts wtb
+		separator: String,
+		buyPrependText: String,
+		buyAppendText: String,
+		sellPrependText: String,
+		sellAppendText: String,
+		buyModifier: Number,
+		sellModifier: Number,
+		buyPModifier: Number,
+		sellPModifier: Number,
+		buyAt: String,
+		sellAt: String,
+		buyCommon: Boolean,
+		buyUncommon: Boolean,
+		buyRare: Boolean,
+		sellCommon: Boolean,
+		sellUncommon: Boolean,
+		sellRare: Boolean,
+		gPrefix: String,
+		gSuffix: String,
+		qPrefix: String,
+		qSuffix: String,
+		includeEnergy: Boolean,
+		includeOrder: Boolean,
+		includeGrowth: Boolean,
+		minPrice: Number,
+		maxPrice: Number
+	}
 });
 
 UserModel = mongoose.model('User', UserModel);
