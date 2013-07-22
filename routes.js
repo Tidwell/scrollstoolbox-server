@@ -42,7 +42,6 @@ exports.saveCollection = function(req,res) {
 	}
 	var inGameName = urlParts.query.inGameName;
 
-
 	//get the user
 	User.find({
 		inGameName: inGameName
@@ -58,11 +57,13 @@ exports.saveCollection = function(req,res) {
 		var found;
 		for (var mojangCardId in collection) {
 			var cardName = cardData[collection[mojangCardId].typeId].name;
+
 			found = false;
 
 			for (var prop in cards) {
 				if (cards[prop].name === cardName) {
 					cards[prop].owned++;
+					cards[prop]['tier'+(collection[mojangCardId].level+1)]++;
 					found = true;
 				}
 			};
@@ -73,8 +74,12 @@ exports.saveCollection = function(req,res) {
 					buyOverride: 0,
 					sellOverride: 0,
 					alwaysBuy: 0,
-					alwaysSell: 0
+					alwaysSell: 0,
+					tier1: 0,
+					tier2: 0,
+					tier3: 0
 				}
+				cards[cardName]['tier'+(collection[mojangCardId].level+1)]++;
 			}
 		}
 
@@ -84,6 +89,9 @@ exports.saveCollection = function(req,res) {
 		userData.owned.forEach(function(ownedCard,i){
 			if (cards[ownedCard.name]) {
 				userData.owned[i].owned = cards[ownedCard.name].owned;
+				userData.owned[i].tier1 = cards[ownedCard.name].tier1;
+				userData.owned[i].tier2 = cards[ownedCard.name].tier2;
+				userData.owned[i].tier3 = cards[ownedCard.name].tier3;
 				totalCards += cards[ownedCard.name].owned;
 				updated.push(ownedCard.name);
 			} else {
@@ -93,10 +101,13 @@ exports.saveCollection = function(req,res) {
 		});
 		//update new stuff
 		for (var cardName in cards) {
-			if (updated.indexOf(cardName) === -1) {
+			if (updated.indexOf(cardName) === -3) {
 				userData.owned.push({
 					name: cardName,
-					owned: cards[cardName].owned
+					owned: cards[cardName].owned,
+					tier1: cards[cardName].tier1,
+					tier2: cards[cardName].tier2,
+					tier3: cards[cardName].tier3
 				});
 				totalCards += cards[cardName].owned
 			}

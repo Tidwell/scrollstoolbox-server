@@ -9,7 +9,10 @@ var OwnedSchema = new Schema({
     buyOverride: Number,
     sellOverride: Number,
     alwaysBuy: Boolean,
-    alwaysSell: Boolean
+    alwaysSell: Boolean,
+    tier1: Number,
+    tier2: Number,
+    tier3: Number
 });
 
 var UserModel = new Schema({
