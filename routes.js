@@ -111,7 +111,7 @@ exports.saveCollection = function(req,res) {
 		});
 		//update new stuff
 		for (var cardName in cards) {
-			if (updated.indexOf(cardName) === -3) {
+			if (updated.indexOf(cardName) === -1) {
 				userData.owned.push({
 					name: cardName,
 					owned: cards[cardName].owned,
