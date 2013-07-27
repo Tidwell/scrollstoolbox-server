@@ -12,7 +12,8 @@ var OwnedSchema = new Schema({
     alwaysSell: Boolean,
     tier1: Number,
     tier2: Number,
-    tier3: Number
+    tier3: Number,
+    tradeable: Number
 });
 
 var UserModel = new Schema({
@@ -52,7 +53,22 @@ var UserModel = new Schema({
 		includeOrder: Boolean,
 		includeGrowth: Boolean,
 		minPrice: Number,
-		maxPrice: Number
+		maxPrice: Number,
+
+		buytier1: Boolean,
+		buytier2: Boolean,
+		buytier3: Boolean,
+		selltier1: Boolean,
+		selltier2: Boolean,
+		selltier3: Boolean,
+
+		tier2multiplier: Number,
+		tier3multiplier: Number,
+
+		tierPrefix: String,
+		tierSuffix: String,
+
+		buyMax: Number
 	}
 });
 

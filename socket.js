@@ -180,6 +180,16 @@ module.exports = {
 			if (card.alwaysSell) {
 				card.alwaysSell = Number(card.alwaysSell);
 			}
+			if (card.tier1) {
+				card.tier1 = Number(card.tier1);
+			}
+			if (card.tier2) {
+				card.tier2 = Number(card.tier2);
+			}
+
+			if (card.tier3) {
+				card.tier3 = Number(card.tier3);
+			}
 
 			var found = false;
 			socket.user.owned.forEach(function(ownedCard, i) {
@@ -200,7 +210,6 @@ module.exports = {
 				socket.emit('card:saved', {
 					card: card.name
 				});
-				delete user.password;
 			});
 		}
 
@@ -319,7 +328,6 @@ module.exports = {
 					socket.emit('collection:list', {error: true, msg: 'No user found'});
 					return;
 				}
-				console.log(userData);
 				socket.emit('collection:list', {collection: userData[0].owned});
 			});
 		}
