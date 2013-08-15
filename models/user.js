@@ -68,7 +68,27 @@ var UserModel = new Schema({
 		tierPrefix: String,
 		tierSuffix: String,
 
-		buyMax: Number
+		buyMax: Number,
+
+		goal: Number,
+
+		ownedColors: {
+			extras: String,
+			playset: String,
+			missing: String,
+			none: String
+		},
+		rarityColors: {
+			rare: String,
+			uncommon: String,
+			common: String
+		},
+		factionColors: {
+			growth: String,
+			order: String,
+			energy: String,
+			decay: String
+		}
 	}
 });
 
