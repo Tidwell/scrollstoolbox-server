@@ -52,6 +52,7 @@ var UserModel = new Schema({
 		includeEnergy: Boolean,
 		includeOrder: Boolean,
 		includeGrowth: Boolean,
+		includeDecay: Boolean,
 		minPrice: Number,
 		maxPrice: Number,
 
