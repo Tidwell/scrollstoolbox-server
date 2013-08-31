@@ -89,7 +89,9 @@ var UserModel = new Schema({
 			order: String,
 			energy: String,
 			decay: String
-		}
+		},
+
+		roundto: Number
 	}
 });
 
