@@ -20,10 +20,10 @@ var stripProps = [
 ];
 
 function getScrolls(cb) {
-	if (env === 'local') {
-		if (cb) { cb(parseData(localCache).data); }
-		return;
-	}
+	// if (env === 'local') {
+	// 	if (cb) { cb(parseData(localCache).data); }
+	// 	return;
+	// }
 	http.get("http://a.scrollsguide.com/scrolls", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
@@ -55,7 +55,7 @@ function parseData(data) {
 }
 
 function getPrices(cb) {
-	http.get("http://api.scrollspost.com/v1/prices/3-days/", function(res) {
+	http.get("http://a.scrollsguide.com/prices", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
 			data += chunk;
@@ -74,14 +74,13 @@ function getPrices(cb) {
 
 function parsePrices(data,cb) {
 	var all = {};
-	data.forEach(function(item,i) {
+	data.data.forEach(function(item,i) {
 		var obj = {
-			low: Math.min(item.price.buy, item.price.sell),
-			high: Math.max(item.price.buy, item.price.sell),
-			suggested: item.price.suggested
+			low: Math.min(item.buy, item.sell),
+			high: Math.max(item.buy, item.sell),
+			//suggested: item.price.suggested
 		};
-
-		all[item.name] = obj;
+		all[item.id] = obj;
 	});
 	if (cb) { cb(all); }
 }

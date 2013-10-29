@@ -48,14 +48,14 @@ function checkDone(cb) {
 function updatePrices(cb) {
 	var allCards = {};
 	cardData.forEach(function(card) {
-		if (!prices[card.name]) {
-			prices[card.name] = {
+		if (!prices[card.id]) {
+			prices[card.id] = {
 				low: null,
 				high: null
 			};
 		}
 		allCards[card.name] = {
-			price: prices[card.name],
+			price: prices[card.id],
 			card: card
 		}
 	});
