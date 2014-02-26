@@ -44,28 +44,12 @@ function parseData(data) {
 	if (typeof data === 'string') {
 		data = JSON.parse(data);
 	}
-	var found286;
 	data.data.forEach(function(card,i){
-		if (card.id === 286) {
-			found286 = true;
-		}
 		stripProps.forEach(function(prop){
 			delete card[prop];
 			data.data[i] = card;
 		});
 	});
-
-	if (!found286) {
-		data.data.push({
-			id: 286,
-			name: 'Tempest Reaver',
-			costgrowth: 0,
-			costorder: 0,
-			costenergy: 4,
-			costdecay: 0,
-			rarity: 1
-		});
-	}
 
 	return data;
 }
