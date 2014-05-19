@@ -55,7 +55,7 @@ function parseData(data) {
 }
 
 function getPrices(cb) {
-	http.get("http://a.scrollsguide.com/prices", function(res) {
+	http.get("http://a.scrollsguide.com/experimentalprices", function(res) {
 		var data = '';
 		res.on('data', function(chunk) {
 			data += chunk;
@@ -76,8 +76,8 @@ function parsePrices(data,cb) {
 	var all = {};
 	data.data.forEach(function(item,i) {
 		var obj = {
-			low: Math.min(item.buy, item.sell),
-			high: Math.max(item.buy, item.sell),
+			low: Math.min(item.buy.price, item.sell.price),
+			high: Math.max(item.buy.price, item.sell.price),
 			//suggested: item.price.suggested
 		};
 		all[item.id] = obj;
